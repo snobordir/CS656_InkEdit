@@ -91,7 +91,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             drawView.setDrawingCacheEnabled(true); // Allow caching of our ink
 
 
-
+            // This comment is solely to test github
+            //int pointless = 0;
 
             try {
                 // save the image as png
