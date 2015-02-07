@@ -92,7 +92,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
 
             // This comment is solely to test github
-            //int pointless = 0;
+            int pointless = 0;
 
             try {
                 // save the image as png
