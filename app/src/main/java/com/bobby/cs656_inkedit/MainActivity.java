@@ -32,8 +32,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     private DrawingView drawView;
     private Button saveButton, newButton, loadButton;
-    private CheckBox graffitiCheck;
-    EditText fileNameEdit;
+    private static CheckBox graffitiCheck;
+    private static EditText fileNameEdit;
     File file, serialFile;
 
     @Override
@@ -57,6 +57,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         graffitiCheck = (CheckBox) findViewById(R.id.graffiti_check);
 
         fileNameEdit = (EditText) findViewById(R.id.filename_Edit);
+
 
         file = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES), "ink_"); // get path
@@ -127,7 +128,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
                 Toast success = Toast.makeText(getApplicationContext(), "Saved as \"" + fileNameEdit.getText()
                         + ".txt\" in 'Documents' folder!", Toast.LENGTH_SHORT);
-                success.show();
+                //success.show();
 
             } catch (Exception error) {
                 //Log.e("Error saving image", error.getMessage());
@@ -155,7 +156,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
 
                 Toast success = Toast.makeText(getApplicationContext(), "Saved as \"" + fileNameEdit.getText()
-                        + ".png\" in 'Pictures' folder!", Toast.LENGTH_SHORT);
+                        + "!", Toast.LENGTH_SHORT);
                 success.show();
 
             } catch (Exception error) {
@@ -166,6 +167,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
             drawView.destroyDrawingCache(); // Delete cached ink
 
+            //
+            // Old method of trying to save bitmaps; caused problems.
+            // Problems may have been just not updating the mediascanner.
+            //
             /*
             drawView.setDrawingCacheEnabled(true); // Allow caching of our ink
             String savedInk = MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(),
@@ -188,6 +193,19 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         else if(v.getId()==R.id.new_btn){
             // New drawing. Just clear the screen.
             drawView.newDrawing();
+
+            //
+            // test for debugging purposes; interesting though, so I'll leave it behind.
+            //
+            if(graffitiModeOn()){
+                Toast toasty = Toast.makeText(getApplicationContext(), "Graffiti mode ON.", Toast.LENGTH_SHORT);
+                toasty.show();
+            }
+            else{
+                Toast toasty = Toast.makeText(getApplicationContext(), "Graffiti mode OFF.", Toast.LENGTH_SHORT);
+                toasty.show();
+            }
+
         }
         else if(v.getId()==R.id.load_btn){
             // Load a drawing. Create intent to get bitmap
@@ -226,7 +244,11 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     }
 
     // See if user has turned graffiti mode on.
-    public boolean graffitiModeOn(){
+    public static boolean graffitiModeOn(){
         return graffitiCheck.isChecked();
+    }
+
+    public static void appendLetter(char newLetter){
+        fileNameEdit.setText(fileNameEdit.getText().append(newLetter));
     }
 }
