@@ -80,6 +80,7 @@ public class DrawingView extends View {
         PointF tempPoint = new PointF(touchX,touchY);
 
         // Detect the user drawing a stroke.
+        // To do graffiti recognizer, this must also save the stroke coordinates.
         switch(event.getAction()){
             case MotionEvent.ACTION_DOWN:   // Screen touched -- start line
                 drawPath.moveTo(touchX,touchY);

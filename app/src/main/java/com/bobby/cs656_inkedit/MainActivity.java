@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     private DrawingView drawView;
     private Button saveButton, newButton, loadButton;
+    private CheckBox graffitiCheck;
     EditText fileNameEdit;
     File file, serialFile;
 
@@ -50,6 +52,9 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         saveButton.setOnClickListener(this);
         newButton.setOnClickListener(this);
         loadButton.setOnClickListener(this);
+
+        // Create checkbox for graffiti mode
+        graffitiCheck = (CheckBox) findViewById(R.id.graffiti_check);
 
         fileNameEdit = (EditText) findViewById(R.id.filename_Edit);
 
@@ -218,5 +223,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
             }
         }
+    }
+
+    // See if user has turned graffiti mode on.
+    public boolean graffitiModeOn(){
+        return graffitiCheck.isChecked();
     }
 }
