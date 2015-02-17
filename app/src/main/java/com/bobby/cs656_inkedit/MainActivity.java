@@ -2,6 +2,7 @@ package com.bobby.cs656_inkedit;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.PointF;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,9 +16,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity implements View.OnClickListener {
@@ -25,7 +32,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     private DrawingView drawView;
     private Button saveButton, newButton, loadButton;
     EditText fileNameEdit;
-    File file;
+    File file, serialFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +55,9 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
         file = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES), "ink_"); // get path
+
+        serialFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                , "json_"); // serialized points path
 
     }
 
@@ -87,13 +97,40 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
             String imagePath =  file.getPath() + fileName + ".png";
 
+            // I also need to save my list of points for classifying graffiti
+            String serialPath = serialFile.getPath() + fileName + ".txt";
+
+            // Get the type for GSON to make some sweet nice JSON format of my points
+            Type listType = new TypeToken<List<List<PointF>>>() {}.getType();
+            List<List<PointF>> saveStrokes = drawView.getStrokes();
+
+            // In theory this gives me a nicely formatted representation of my points/list of list
+            // to save in a text file to easily recover later.
+            Gson gson = new Gson();
+            String json = gson.toJson(saveStrokes, listType);
+//            List<String> target2 = gson.fromJson(json, listType);
+
 
             drawView.setDrawingCacheEnabled(true); // Allow caching of our ink
 
+            // Saving the image as a series of strokes in JSON format as a text file in the documents folder
+            try {
+                // save the image as a text file/JSON
+                FileWriter outSerial = new FileWriter(serialPath);
+                outSerial.write(json);
+                outSerial.close();
 
-            // This comment is solely to test github
-            int pointless = 0;
+                Toast success = Toast.makeText(getApplicationContext(), "Saved as \"" + fileNameEdit.getText()
+                        + ".txt\" in 'Documents' folder!", Toast.LENGTH_SHORT);
+                success.show();
 
+            } catch (Exception error) {
+                //Log.e("Error saving image", error.getMessage());
+                Toast fail = Toast.makeText(getApplicationContext(), "Couldn't save JSON text.", Toast.LENGTH_SHORT);
+                fail.show();
+            }
+
+            // Saving the image as a bitmap in the gallery
             try {
                 // save the image as png
                 FileOutputStream out = new FileOutputStream(imagePath);
