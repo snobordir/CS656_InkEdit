@@ -156,7 +156,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
 
                 Toast success = Toast.makeText(getApplicationContext(), "Saved as \"" + fileNameEdit.getText()
-                        + "!", Toast.LENGTH_SHORT);
+                        + "\"!", Toast.LENGTH_SHORT);
                 success.show();
 
             } catch (Exception error) {
@@ -251,4 +251,11 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     public static void appendLetter(char newLetter){
         fileNameEdit.setText(fileNameEdit.getText().append(newLetter));
     }
+
+    /*
+    public static void myToast(String message){
+        Toast toasty = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
+        toasty.show();
+    }
+    */
 }
