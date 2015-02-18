@@ -136,8 +136,8 @@ public class DrawingView extends View {
                 if(MainActivity.graffitiModeOn()) {
                     // Attempt to detect which letter was drawn.
                     // This will need to get more advanced.
-                    //char newChar = detectLetterFullScreen();
-                    char newChar = detectLetterNormalized();
+                    //char newChar = classifyLetterFullScreen();
+                    char newChar = classifyLetterNormalized();
 
                     MainActivity.appendLetter(newChar);
                 }
@@ -160,7 +160,7 @@ public class DrawingView extends View {
     // Use features to detect which letter the stroke represents.
     // This version will normalize for size and location.
     //
-    private char detectLetterNormalized() {
+    private char classifyLetterNormalized() {
         char newLetter = 'x';
         letterHeight = lowestPoint - highestPoint;
         letterWidth = rightmostPoint - leftmostPoint;
@@ -178,7 +178,7 @@ public class DrawingView extends View {
             if(strokeEnd.x >= horizontalTwoThirds)
                 newLetter = 'h';
             else {
-                if(centerCount > 5)
+                if(centerCount > 2)
                     newLetter = 'B';
                 else
                     newLetter = 'D';
@@ -190,7 +190,7 @@ public class DrawingView extends View {
             else if(strokeEnd.y <= verticalTwoThirds && strokeEnd.x >= horizontalThird)  // Stroke ended in the vertical center, on the right. It's G. TODO I'm not super confident about this feature! Fix?
                 newLetter = 'G';
             else {    // It's C or E. These are going to be hard to distinguish.
-                if(centerCount > 5)
+                if(centerCount > 2)
                     newLetter = 'E';
                 else
                     newLetter = 'C';
@@ -251,7 +251,7 @@ public class DrawingView extends View {
     // Will be simple for now. Need to improve.
     // This version does not normalize for location or size.
     //
-    private char detectLetterFullScreen() {
+    private char classifyLetterFullScreen() {
         char newLetter = 'x';
 
         if(strokeStart.x <= 250 && strokeStart.y >= 666) // Stroke began in bottom left corner. It's A.
